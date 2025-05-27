@@ -11,7 +11,6 @@ import androidx.camera.core.ImageCapture
 import androidx.camera.video.Recorder
 import androidx.camera.video.Recording
 import androidx.camera.video.VideoCapture
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.cameraxapp.databinding.ActivityMainBinding
 import java.util.concurrent.ExecutorService
@@ -24,7 +23,6 @@ import androidx.camera.core.CameraSelector
 import android.util.Log
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageCaptureException
-import androidx.camera.core.ImageProxy
 import androidx.camera.video.FallbackStrategy
 import androidx.camera.video.MediaStoreOutputOptions
 import androidx.camera.video.Quality

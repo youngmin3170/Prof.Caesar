@@ -73,7 +73,7 @@ class TextAnalyzer(private val onTextDetected: (String) -> Unit) : ImageAnalysis
             }
         }
 
-        return horizontalLines.joinToString(" ").trim()
+        return horizontalLines.joinToString("\n").trim()
     }
 
 }
