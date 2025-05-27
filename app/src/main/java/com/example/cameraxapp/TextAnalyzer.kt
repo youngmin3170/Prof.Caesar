@@ -6,6 +6,7 @@ import androidx.camera.core.ImageProxy
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
+import kotlin.math.atan2
 
 class TextAnalyzer(private val onTextDetected: (String) -> Unit) : ImageAnalysis.Analyzer {
 
@@ -14,7 +15,7 @@ class TextAnalyzer(private val onTextDetected: (String) -> Unit) : ImageAnalysis
     private var lastUpdateTime = 0L
     private val updateInterval = 1000L
 
-    private var lastText: String = ""
+//    private var lastText: String = ""
 
 
     @androidx.annotation.OptIn(androidx.camera.core.ExperimentalGetImage::class)
@@ -34,9 +35,9 @@ class TextAnalyzer(private val onTextDetected: (String) -> Unit) : ImageAnalysis
 
         recognizer.process(image)
             .addOnSuccessListener { visionText ->
-                val newText = visionText.text.trim()
-                if (newText.isNotEmpty() && newText != lastText) {
-                    lastText = newText
+                val newText = extractHorizontalText(visionText)
+                if (newText.isNotEmpty() ) { //&& newText != lastText
+//                    lastText = newText
                     lastUpdateTime = currentTime
                     onTextDetected(newText)
                 } else {
@@ -51,4 +52,28 @@ class TextAnalyzer(private val onTextDetected: (String) -> Unit) : ImageAnalysis
                 imageProxy.close()
             }
     }
+
+    private fun extractHorizontalText(visionText: com.google.mlkit.vision.text.Text): String {
+        val horizontalLines = mutableListOf<String>()
+
+        for (block in visionText.textBlocks) {
+            for (line in block.lines) {
+                val points = line.cornerPoints
+                if (points != null && points.size >= 2) {
+                    val dx = points[1].x - points[0].x
+                    val dy = points[1].y - points[0].y
+                    val angle = Math.toDegrees(atan2(dy.toDouble(), dx.toDouble()))
+                    val normalizedAngle = (angle + 360) % 360
+
+                    if (normalizedAngle in 75.0..105.0 || normalizedAngle in 255.0..285.0) {
+                        continue // skip vertical lines
+                    }
+                }
+                horizontalLines.add(line.text)
+            }
+        }
+
+        return horizontalLines.joinToString(" ").trim()
+    }
+
 }
