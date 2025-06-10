@@ -2,6 +2,7 @@ package com.example.cameraxapp
 
 import android.Manifest
 import android.content.ContentValues
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -21,6 +22,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.core.Preview
 import androidx.camera.core.CameraSelector
 import android.util.Log
+import android.view.View
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.video.FallbackStrategy
@@ -29,6 +31,9 @@ import androidx.camera.video.Quality
 import androidx.camera.video.QualitySelector
 import androidx.camera.video.VideoRecordEvent
 import androidx.core.content.PermissionChecker
+import com.google.ar.core.ArCoreApk
+import com.google.ar.core.Session
+import com.google.ar.core.exceptions.UnavailableUserDeclinedInstallationException
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -43,6 +48,10 @@ class MainActivity : AppCompatActivity() {
     // background thread for image process
     private lateinit var cameraExecutor: ExecutorService
 
+    private var mSession: Session? = null
+    private var mUserRequestedInstall = true
+
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,6 +59,8 @@ class MainActivity : AppCompatActivity() {
 
         viewBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
+
+        maybeEnableArButton()
 
         // Request camera permissions
         if (allPermissionsGranted()) {
@@ -61,9 +72,49 @@ class MainActivity : AppCompatActivity() {
         // Set up the listeners for take photo and video capture buttons
         viewBinding.imageCaptureButton.setOnClickListener { takePhoto() }
         viewBinding.videoCaptureButton.setOnClickListener { captureVideo() }
+        viewBinding.arButton.setOnClickListener { launchArScene() }
 
         // create background thread
         cameraExecutor = Executors.newSingleThreadExecutor()
+    }
+    override fun onResume() {
+        super.onResume()
+        // Handle ARCore installation
+        try {
+            if (mSession == null) {
+                when (ArCoreApk.getInstance().requestInstall(this, mUserRequestedInstall)) {
+                    ArCoreApk.InstallStatus.INSTALLED -> {
+                        mSession = Session(this)  // ARCore session ready
+                    }
+                    ArCoreApk.InstallStatus.INSTALL_REQUESTED -> {
+                        mUserRequestedInstall = false
+                        return
+                    }
+                }
+            }
+        } catch (e: UnavailableUserDeclinedInstallationException) {
+            Toast.makeText(this, "ARCore install declined: $e", Toast.LENGTH_LONG).show()
+            return
+        } catch (e: Exception) {
+            Toast.makeText(this, "ARCore install error: $e", Toast.LENGTH_LONG).show()
+            return
+        }
+    }
+
+
+        private fun maybeEnableArButton() {
+        ArCoreApk.getInstance().checkAvailabilityAsync(this) { availability ->
+            with(viewBinding.arButton) {
+                visibility = if (availability.isSupported) View.VISIBLE else View.INVISIBLE
+                isEnabled = availability.isSupported
+            }
+        }
+    }
+
+    private fun launchArScene() {
+
+        val intent = Intent(this, ArActivity::class.java)
+        startActivity(intent)
     }
 
     private fun takePhoto() {
@@ -277,4 +328,6 @@ class MainActivity : AppCompatActivity() {
                 startCamera()
             }
         }
+
+
 }
