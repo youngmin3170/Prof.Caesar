@@ -42,6 +42,7 @@ class MainActivity : AppCompatActivity() {
         // Enable AR button if supported
         ArSupportHelper.maybeEnableArButton(this, viewBinding)
 
+
         // Request camera permissions
         if (PermissionHelper.allPermissionsGranted(this)) {
             cameraHelper.startCamera()
