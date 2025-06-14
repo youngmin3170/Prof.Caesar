@@ -1,4 +1,4 @@
-package com.example.cameraxapp
+package com.example.cameraxapp.textRecognition
 
 import android.util.Log
 import androidx.camera.core.ImageAnalysis

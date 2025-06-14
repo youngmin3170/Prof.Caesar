@@ -22,7 +22,7 @@
         android:text="@string/take_photo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/vertical_centerline" />
+        app:layout_constraintEnd_toStartOf="@id/vertical_line" />
 
     <Button
         android:id="@+id/video_capture_button"
@@ -33,7 +33,18 @@
         android:elevation="2dp"
         android:text="@string/start_video"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/vertical_centerline" />
+        app:layout_constraintStart_toEndOf="@id/vertical_line" />
+
+    <Button
+        android:id="@+id/arButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/start_ar"
+        android:visibility="invisible"
+        android:enabled="false"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp"/>
 
     <TextView
         android:id="@+id/textOutput"
@@ -42,12 +53,13 @@
         android:background="#80000000"
         android:textColor="#FFFFFF"
         android:padding="8dp"
-        android:layout_alignParentBottom="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         android:layout_margin="16dp"/>
 
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/vertical_centerline"
+        android:id="@+id/vertical_line"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"

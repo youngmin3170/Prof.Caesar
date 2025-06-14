@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.cameraxapp"
-        minSdk = 21
+        minSdk = 24
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -49,7 +49,6 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    val cameraxVersion = "1.4.2"
     implementation(libs.androidx.camera.core)
     implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.camera.lifecycle)
@@ -59,5 +58,8 @@ dependencies {
 
     // text recognition
     implementation(libs.text.recognition)
+
+    // ArCore
+    implementation(libs.ar.core)
 
 }
