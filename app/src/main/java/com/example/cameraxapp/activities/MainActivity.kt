@@ -35,7 +35,6 @@ class MainActivity : AppCompatActivity() {
         // Warm-up ARCore availability check (ignore result)
         ArCoreApk.getInstance().checkAvailability(this)
 
-
         // create background thread
         cameraExecutor = Executors.newSingleThreadExecutor()
 
@@ -46,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         ArSupportHelper.maybeEnableArButton(this, viewBinding)
 
 
-        // Request camera permissions
+        // Request permissions
         if (PermissionHelper.allPermissionsGranted(this)) {
             cameraHelper.startCamera()
         } else {
@@ -78,7 +77,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     private fun requestPermissions() {
         activityResultLauncher.launch(PermissionHelper.REQUIRED_PERMISSIONS)
     }
@@ -89,30 +87,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val activityResultLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
-            permissions ->
-            // Handle Permission granted/rejected
-            var permissionGranted = true
-            permissions.entries.forEach {
-                if (it.key in PermissionHelper.REQUIRED_PERMISSIONS && !it.value)
-                    permissionGranted = false
-            }
-            if (!permissionGranted) {
-                Toast.makeText(baseContext,
-                    "Camera and audio permissions are required. Please enable them in Settings.",
-                    Toast.LENGTH_SHORT).show()
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
 
-                val shouldRedirectToSettings = PermissionHelper.shouldRedirectToSettings(this)
+            val missingPermissions = PermissionHelper.getMissingRequiredPermissions(this, permissions)
 
-                if (shouldRedirectToSettings) {
+            if (missingPermissions.isNotEmpty()) {
+                val message = "Missing permission(s): ${missingPermissions.joinToString(", ")}"
+                Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+
+                if (PermissionHelper.shouldRedirectToSettings(this)) {
                     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
                         data = Uri.fromParts("package", packageName, null)
                     }
                     startActivity(intent)
                 }
+
                 finish()
             } else {
                 cameraHelper.startCamera()
             }
         }
+
+
 }

@@ -62,4 +62,8 @@ dependencies {
     // ArCore
     implementation(libs.ar.core)
 
+    // geospatial API
+    implementation(libs.play.services.location)
+
+
 }
