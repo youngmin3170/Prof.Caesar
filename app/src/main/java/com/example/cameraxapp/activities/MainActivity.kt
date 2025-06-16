@@ -1,6 +1,9 @@
-package com.example.cameraxapp
+package com.example.cameraxapp.activities
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
 import com.example.cameraxapp.databinding.ActivityMainBinding
 import java.util.concurrent.ExecutorService
@@ -52,12 +55,27 @@ class MainActivity : AppCompatActivity() {
         // Set up the listeners for take photo and video capture buttons
         viewBinding.imageCaptureButton.setOnClickListener { cameraHelper.takePhoto() }
         viewBinding.videoCaptureButton.setOnClickListener { cameraHelper.captureVideo() }
+
+        // Set up the listeners for AR button
+        viewBinding.arButton.setOnClickListener {
+            if (ArSupportHelper.ensureArCoreInstalled(this)) {
+                Toast.makeText(this, "AR mode activated", Toast.LENGTH_SHORT).show()
+
+                // TODO: add ar feature
+
+            } else {
+                Toast.makeText(this, "ARCore not available or permission missing",
+                    Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     // check if ARCore is installed and up-to-date on the device
     override fun onResume() {
         super.onResume()
-        ArSupportHelper.ensureArCoreInstalled(this)
+        if (!ArSupportHelper.isARCoreSupportedAndUpToDate(this)) {
+            Toast.makeText(this, "ARCore not available or needs update.", Toast.LENGTH_LONG).show()
+        }
     }
 
 
@@ -71,9 +89,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val activityResultLauncher =
-        registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions())
-        { permissions ->
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+            permissions ->
             // Handle Permission granted/rejected
             var permissionGranted = true
             permissions.entries.forEach {
@@ -82,8 +99,18 @@ class MainActivity : AppCompatActivity() {
             }
             if (!permissionGranted) {
                 Toast.makeText(baseContext,
-                    "Permission request denied",
+                    "Camera and audio permissions are required. Please enable them in Settings.",
                     Toast.LENGTH_SHORT).show()
+
+                val shouldRedirectToSettings = PermissionHelper.shouldRedirectToSettings(this)
+
+                if (shouldRedirectToSettings) {
+                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                        data = Uri.fromParts("package", packageName, null)
+                    }
+                    startActivity(intent)
+                }
+                finish()
             } else {
                 cameraHelper.startCamera()
             }

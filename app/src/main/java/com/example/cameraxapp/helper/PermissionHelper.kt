@@ -1,9 +1,11 @@
 package com.example.cameraxapp.helper
 
 import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 
 object PermissionHelper {
@@ -21,6 +23,12 @@ object PermissionHelper {
     fun allPermissionsGranted(context: Context): Boolean {
         return REQUIRED_PERMISSIONS.all {
             ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
+        }
+    }
+
+    fun shouldRedirectToSettings(context: Context): Boolean {
+        return REQUIRED_PERMISSIONS.any {
+            !ActivityCompat.shouldShowRequestPermissionRationale(context as Activity, it)
         }
     }
 }
