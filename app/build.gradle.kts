@@ -65,7 +65,13 @@ dependencies {
     // geospatial API
     implementation(libs.play.services.location)
 
-    implementation(libs.arsceneview)
+    // rendering 3D
+    implementation(libs.sceneform.ux)
 
-
+}
+configurations.all {
+    exclude(group = "com.android.support", module = "support-compat")
+    exclude(group = "com.android.support", module = "support-core-utils")
+    exclude(group = "com.android.support", module = "support-v4")
+    exclude(group = "com.android.support", module = "support-media-compat")
 }
