@@ -14,6 +14,7 @@ playServicesLocation = "21.3.0"
 sceneformUx = "1.17.1"
 textRecognition = "16.0.1"
 arCore = "1.49.0"
+assets = "1.17.1"
 
 
 [libraries]
@@ -35,6 +36,7 @@ play-services-location = { module = "com.google.android.gms:play-services-locati
 sceneform-ux = { module = "com.google.ar.sceneform.ux:sceneform-ux", version.ref = "sceneformUx" }
 text-recognition = { module = "com.google.mlkit:text-recognition", version.ref = "textRecognition" }
 ar-core = { module = "com.google.ar:core", version.ref = "arCore" }
+assets = { group = "com.google.ar.sceneform", name = "assets", version.ref = "assets" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

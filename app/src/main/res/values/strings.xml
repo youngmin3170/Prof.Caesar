@@ -5,4 +5,5 @@
     <string name="stop_video">Stop video</string>
     <string name="text_detection">Text detection</string>
     <string name="start_ar">Start AR</string>
+    <string name="stop_ar">Stop AR</string>
 </resources>

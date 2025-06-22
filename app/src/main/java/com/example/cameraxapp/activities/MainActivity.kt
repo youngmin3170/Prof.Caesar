@@ -20,6 +20,12 @@ import com.example.cameraxapp.ar.GeoArHelper
 import com.google.ar.core.Anchor
 import com.google.ar.core.ArCoreApk
 import androidx.core.net.toUri
+import com.google.ar.sceneform.AnchorNode
+import com.google.ar.sceneform.Node
+import com.google.ar.sceneform.assets.RenderableSource
+import com.google.ar.sceneform.rendering.ModelRenderable
+import com.google.ar.sceneform.ux.ArFragment
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var viewBinding: ActivityMainBinding
@@ -30,12 +36,22 @@ class MainActivity : AppCompatActivity() {
     // background thread for image process
     private lateinit var cameraExecutor: ExecutorService
 
+    private var arrowRenderable: ModelRenderable? = null
+
+
+    private var authoringMode = true
+
+    private var arInitialized = false
+
+    private var isArVisible = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         viewBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
+
 
         // Warm-up ARCore availability check (ignore result)
         ArCoreApk.getInstance().checkAvailability(this)
@@ -61,15 +77,99 @@ class MainActivity : AppCompatActivity() {
 
         // Set up the listeners for AR button
         viewBinding.arButton.setOnClickListener {
-            if (ArSupportHelper.ensureArCoreInstalled(this)) {
+            val arFragment = supportFragmentManager.findFragmentById(R.id.ar_fragment) as ArFragment
+
+            if (!isArVisible) {
+                // Show AR
+                arFragment.view?.visibility = View.VISIBLE
+                viewBinding.arButton.text = getString(R.string.stop_ar)
+                isArVisible = true
+
                 Toast.makeText(this, "AR mode activated", Toast.LENGTH_SHORT).show()
 
-                // TODO: add ar feature
+                if (!arInitialized) {
+                    arInitialized = true
+                    val session = GeoArHelper.createSession(this)
+                    if (session != null) {
+                        arFragment.arSceneView.setupSession(session)
+                        Toast.makeText(this, "AR session started in Geospatial mode", Toast.LENGTH_SHORT).show()
+
+                        // Restore saved arrows if in view mode
+                        if (!authoringMode) {
+                            val savedAnchors = GeoArHelper.getSavedAnchorLocations()
+                            for ((lat, lng, alt) in savedAnchors) {
+                                val restoredAnchor = GeoArHelper.createAnchorAt(lat, lng, alt)
+                                if (restoredAnchor != null && arrowRenderable != null) {
+                                    placeArrow(restoredAnchor)
+                                }
+                            }
+                        }
+
+                        arFragment.arSceneView.scene.setOnTouchListener { _, _ ->
+                            val frame = arFragment.arSceneView.arFrame ?: return@setOnTouchListener false
+                            if (authoringMode) {
+                                val geoPose = GeoArHelper.getGeospatialPose(frame)
+                                if (geoPose != null) {
+                                    val anchor = GeoArHelper.createAnchorAt(
+                                        geoPose.latitude,
+                                        geoPose.longitude,
+                                        geoPose.altitude
+                                    )
+                                    if (anchor != null && arrowRenderable != null) {
+                                        GeoArHelper.saveAnchorLocation(
+                                            geoPose.latitude,
+                                            geoPose.longitude,
+                                            geoPose.altitude
+                                        )
+                                        placeArrow(anchor)
+                                        Toast.makeText(this, "Arrow placed!", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                            }
+                            true
+                        }
+                    } else {
+                        Toast.makeText(this, "Failed to create AR session", Toast.LENGTH_LONG).show()
+                    }
+                }
 
             } else {
-                Toast.makeText(this, "ARCore not available or permission missing",
-                    Toast.LENGTH_SHORT).show()
+                // Hide AR
+                arFragment.view?.visibility = View.GONE
+                viewBinding.arButton.text = getString(R.string.start_ar)
+                isArVisible = false
+                Toast.makeText(this, "AR mode stopped", Toast.LENGTH_SHORT).show()
             }
+        }
+
+
+        ModelRenderable.builder()
+            .setSource(
+                this,
+                RenderableSource.builder()
+                    .setSource(this, "arrow.glb".toUri(), RenderableSource.SourceType.GLB)
+                    .setRecenterMode(RenderableSource.RecenterMode.ROOT)
+                    .build()
+            )
+            .setRegistryId("arrow.glb")
+            .build()
+            .thenAccept { renderable ->
+                arrowRenderable = renderable
+            }
+            .exceptionally {
+                Toast.makeText(this, "Failed to load arrow model", Toast.LENGTH_LONG).show()
+                null
+            }
+    }
+    private fun placeArrow(anchor: Anchor) {
+
+        val anchorNode = AnchorNode(anchor).apply {
+            setParent((supportFragmentManager.findFragmentById(R.id.ar_fragment) as ArFragment).arSceneView.scene)
+        }
+
+        val arrowNode = Node().apply {
+            renderable = arrowRenderable
+            setParent(anchorNode)
         }
     }
 

@@ -65,4 +65,13 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent=".50" />
 
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/ar_fragment"
+        android:name="com.google.ar.sceneform.ux.ArFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
