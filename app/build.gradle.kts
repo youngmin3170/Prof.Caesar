@@ -65,5 +65,7 @@ dependencies {
     // geospatial API
     implementation(libs.play.services.location)
 
+    implementation(libs.arsceneview)
+
 
 }

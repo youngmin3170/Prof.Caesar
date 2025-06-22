@@ -3,9 +3,11 @@ package com.example.cameraxapp.ar
 import android.app.Activity
 import android.content.Context
 import android.util.Log
+import android.view.MotionEvent
 import com.google.ar.core.*
-import com.google.ar.core.exceptions.*
-import java.util.*
+import java.util.concurrent.Executor
+import java.util.function.BiConsumer
+
 
 object GeoArHelper {
     private var session: Session? = null
@@ -53,9 +55,44 @@ object GeoArHelper {
     fun getSavedAnchorLocations(): List<Triple<Double, Double, Double>> = savedAnchors
 }
 
-
 /*
+fun performHitTestAndPlaceTerrainAnchor(
+        frame: Frame,
+        motionEvent: MotionEvent,
+        onAnchorReady: (Anchor) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        val session = session ?: return onError("Session is null.")
+        val earth = session.earth ?: return onError("Earth is null.")
+        if (earth.trackingState != TrackingState.TRACKING) {
+            return onError("Earth tracking not available.")
+        }
 
-Arrow by Vanessa Cao
- [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza (https://poly.pizza/m/bC3FokNqTpi)
+        val hitResults = frame.hitTest(motionEvent)
+        for (hit in hitResults) {
+            val pose = hit.hitPose
+            val geoPose = earth.getGeospatialPose(pose)
+            val quaternion = geoPose.eastUpSouthQuaternion
+
+            earth.resolveAnchorOnTerrainAsync(
+                geoPose.latitude,
+                geoPose.longitude,
+                0.0,
+                quaternion[0], quaternion[1], quaternion[2], quaternion[3],
+                BiConsumer { anchor, state ->
+                    if (state == Anchor.TerrainAnchorState.SUCCESS && anchor != null) {
+                        saveAnchorLocation(geoPose.latitude, geoPose.longitude, geoPose.altitude)
+                        onAnchorReady(anchor)
+                    } else {
+                        onError("Terrain anchor failed with state: $state")
+                    }
+                }
+            )
+            return
+        }
+
+        onError("No suitable hit result found.")
+    }
+
+
  */
