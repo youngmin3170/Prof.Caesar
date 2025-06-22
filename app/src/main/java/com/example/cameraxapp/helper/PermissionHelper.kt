@@ -43,8 +43,15 @@ object PermissionHelper {
             !ActivityCompat.shouldShowRequestPermissionRationale(context as Activity, it)
         }
     }
+    fun isLocationPermissionGranted(context: Context): Boolean {
+        return ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+    }
 
-    fun getMissingRequiredPermissions(context: Context, permissions: Map<String, Boolean>): List<String> {
+
+    fun getMissingRequiredPermissions(permissions: Map<String, Boolean>): List<String> {
         val denied = mutableListOf<String>()
 
         if (permissions[Manifest.permission.CAMERA] != true) {
