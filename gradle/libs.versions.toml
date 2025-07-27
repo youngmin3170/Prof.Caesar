@@ -13,9 +13,9 @@ constraintlayout = "2.2.1"
 playServicesLocation = "21.3.0"
 sceneformUx = "1.17.1"
 textRecognition = "16.0.1"
-arCore = "1.49.0"
+arCore = "1.50.0"
 assets = "1.17.1"
-
+sceneview = "2.3.0"
 
 [libraries]
 androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraxVersion" }
@@ -33,10 +33,11 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
-sceneform-ux = { module = "com.google.ar.sceneform.ux:sceneform-ux", version.ref = "sceneformUx" }
+#sceneform-ux = { module = "com.google.ar.sceneform.ux:sceneform-ux", version.ref = "sceneformUx" }
 text-recognition = { module = "com.google.mlkit:text-recognition", version.ref = "textRecognition" }
 ar-core = { module = "com.google.ar:core", version.ref = "arCore" }
-assets = { group = "com.google.ar.sceneform", name = "assets", version.ref = "assets" }
+#assets = { group = "com.google.ar.sceneform", name = "assets", version.ref = "assets" }
+ar-scene-view = { module = "io.github.sceneview:arsceneview", version.ref = "sceneview" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

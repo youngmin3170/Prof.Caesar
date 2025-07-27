@@ -12,6 +12,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <FrameLayout
+        android:id="@+id/arContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+<!--    <io.github.sceneview.ar.ARSceneView-->
+<!--        android:id="@+id/sceneView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:visibility="gone" />-->
+
+
     <Button
         android:id="@+id/image_capture_button"
         android:layout_width="110dp"
@@ -44,7 +60,20 @@
         android:enabled="false"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="16dp"/>
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"/>
+
+    <Button
+        android:id="@+id/placeAnchorButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/place_anchor"
+        android:visibility="invisible"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/arButton"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="16dp"/>
+
 
     <TextView
         android:id="@+id/textOutput"
@@ -65,13 +94,5 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent=".50" />
 
-<!--    <androidx.fragment.app.FragmentContainerView-->
-<!--        android:id="@+id/ar_fragment"-->
-<!--        android:name="com.google.ar.sceneform.ux.ArFragment"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:visibility="gone"-->
-<!--        tools:layout_editor_absoluteX="0dp"-->
-<!--        tools:layout_editor_absoluteY="0dp" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
