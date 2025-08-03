@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.example.cameraxapp.databinding.ActivityMainBinding
@@ -19,9 +18,6 @@ import com.example.cameraxapp.ar.ArSupportHelper
 import com.example.cameraxapp.ar.GeoArHelper
 import com.google.ar.core.Anchor
 import com.google.ar.core.ArCoreApk
-import androidx.core.net.toUri
-import com.google.ar.sceneform.rendering.ModelRenderable
-import com.google.ar.core.Earth
 import com.google.ar.core.TrackingState
 import io.github.sceneview.ar.ARSceneView
 import io.github.sceneview.model.ModelInstance

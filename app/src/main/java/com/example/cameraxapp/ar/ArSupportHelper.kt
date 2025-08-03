@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.cameraxapp.databinding.ActivityArBinding
 import com.example.cameraxapp.databinding.ActivityMainBinding
 import com.example.cameraxapp.helper.PermissionHelper
 import com.google.android.gms.location.LocationServices
