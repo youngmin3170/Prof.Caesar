@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">CameraXApp</string>
+    <string name="app_name">Android</string>
     <string name="take_photo">Take Photo</string>
     <string name="start_video">Start Video</string>
     <string name="stop_video">Stop video</string>
-    <string name="text_detection">Text detection</string>
-    <string name="start_ar">Start AR</string>
-    <string name="stop_ar">Stop AR</string>
+<!--    <string name="text_detection">Text detection</string>-->
+    <string name="navigating_around">Navigating Around</string>
+    <string name="scanning_text">Scanning Text</string>
     <string name="place_anchor">Place Anchor</string>"
 </resources>

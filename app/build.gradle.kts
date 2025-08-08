@@ -45,7 +45,6 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-//    implementation(libs.assets)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -67,8 +66,6 @@ dependencies {
     implementation(libs.play.services.location)
 
     // rendering 3D
-//    implementation(libs.sceneform.ux)
-
     implementation(libs.ar.scene.view)
 
 }
